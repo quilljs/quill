@@ -39,6 +39,17 @@ describe('Scroll', function() {
     }, 1);
   });
 
+  it("don't emit if in read-only", function(done) {
+    const scroll = this.initialize(Scroll, '<p>Hello World!</p>');
+    scroll.enable(false);
+    spyOn(scroll.emitter, 'emit').and.callThrough();
+    scroll.domNode.firstChild.appendChild(document.createTextNode('!'));
+    setTimeout(function() {
+      expect(scroll.emitter.emit).not.toHaveBeenCalled();
+      done();
+    }, 1);
+  });
+
   it('prevent dragstart', function() {
     const scroll = this.initialize(Scroll, '<p>Hello World!</p>');
     const dragstart = new Event('dragstart');

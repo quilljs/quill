@@ -151,6 +151,7 @@ class Scroll extends ScrollBlot {
   }
 
   update(mutations) {
+    if (!this.isEnabled()) return;
     if (this.batch) {
       if (Array.isArray(mutations)) {
         this.batch = this.batch.concat(mutations);
