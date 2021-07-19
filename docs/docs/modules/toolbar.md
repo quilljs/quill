@@ -58,6 +58,18 @@ var quill = new Quill('#editor', {
   }
 });
 ```
+or
+```javascript
+var toolbarOptions = {
+    container: ['bold', 'italic', 'underline', 'strike'] 
+};
+
+var quill = new Quill('#editor', {
+  modules: {
+    toolbar: toolbarOptions
+  }
+});
+```
 
 Controls can also be grouped by one level of nesting an array. This will wrap controls in a `<span>` with class name `ql-formats`, providing structure for themes to utilize. For example [Snow](/docs/themes/#snow/) adds extra spacing between control groups.
 
