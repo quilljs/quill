@@ -8,6 +8,7 @@ import Selection, { Range } from './selection';
 import extend from 'extend';
 import logger from './logger';
 import Theme from './theme';
+import Security from './security';
 
 let debug = logger('quill');
 
@@ -67,7 +68,7 @@ class Quill {
     }
     let html = this.container.innerHTML.trim();
     this.container.classList.add('ql-container');
-    this.container.innerHTML = '';
+    this.container.textContent = '';
     this.container.__quill = this;
     this.root = this.addContainer('ql-editor');
     this.root.classList.add('ql-blank');
@@ -97,7 +98,9 @@ class Quill {
         return this.editor.update(null, mutations, index);
       }, source);
     });
-    let contents = this.clipboard.convert(`<div class='ql-editor' style="white-space: normal;">${html}<p><br></p></div>`);
+    // Security: Blessed HTML is already part of the DOM.
+    let initialContents = Quill.import('core/security').blessHTML(`<div class='ql-editor' style="white-space: normal;">${html}<p><br></p></div>`);
+    let contents = this.clipboard.convert(initialContents);
     this.setContents(contents);
     this.history.clear();
     if (this.options.placeholder) {
@@ -361,10 +364,11 @@ Quill.sources = Emitter.sources;
 Quill.version = typeof(QUILL_VERSION) === 'undefined' ? 'dev' : QUILL_VERSION;
 
 Quill.imports = {
-  'delta'       : Delta,
-  'parchment'   : Parchment,
-  'core/module' : Module,
-  'core/theme'  : Theme
+  'delta'         : Delta,
+  'parchment'     : Parchment,
+  'core/module'   : Module,
+  'core/theme'    : Theme,
+  'core/security' : new Security(),
 };
 
 

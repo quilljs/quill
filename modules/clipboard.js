@@ -57,6 +57,7 @@ const STYLE_ATTRIBUTORS = [
 class Clipboard extends Module {
   constructor(quill, options) {
     super(quill, options);
+    this.security = Quill.import('core/security');
     this.quill.root.addEventListener('paste', this.onPaste.bind(this));
     this.container = this.quill.addContainer('ql-clipboard');
     this.container.setAttribute('contenteditable', true);
@@ -73,14 +74,14 @@ class Clipboard extends Module {
   }
 
   convert(html) {
-    if (typeof html === 'string') {
-      this.container.innerHTML = html.replace(/\>\r?\n +\</g, '><'); // Remove spaces between tags
+    if (typeof html === 'string' || this.security.isTrustedHTML(html)) {
+      this.container.innerHTML = this.security.replace(html, /\>\r?\n +\</g, '><'); // Remove spaces between tags
       return this.convert();
     }
     const formats = this.quill.getFormat(this.quill.selection.savedRange.index);
     if (formats[CodeBlock.blotName]) {
       const text = this.container.innerText;
-      this.container.innerHTML = '';
+      this.container.textContent = '';
       return new Delta().insert(text, { [CodeBlock.blotName]: formats[CodeBlock.blotName] });
     }
     let [elementMatchers, textMatchers] = this.prepareMatching();
@@ -90,7 +91,7 @@ class Clipboard extends Module {
       delta = delta.compose(new Delta().retain(delta.length() - 1).delete(1));
     }
     debug.log('convert', this.container.innerHTML, delta);
-    this.container.innerHTML = '';
+    this.container.textContent = '';
     return delta;
   }
 

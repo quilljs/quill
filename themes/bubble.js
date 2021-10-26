@@ -1,3 +1,4 @@
+import Quill from '../core/quill';
 import extend from 'extend';
 import Emitter from '../core/emitter';
 import BaseTheme, { BaseTooltip } from './base';
@@ -17,13 +18,15 @@ class BubbleTheme extends BaseTheme {
     }
     super(quill, options);
     this.quill.container.classList.add('ql-bubble');
+    // Security: Blessed HTML is imported from a trusted file.
+    this.blessedIcons = Quill.import('core/security').deepBless(icons);
   }
 
   extendToolbar(toolbar) {
     this.tooltip = new BubbleTooltip(this.quill, this.options.bounds);
     this.tooltip.root.appendChild(toolbar.container);
-    this.buildButtons([].slice.call(toolbar.container.querySelectorAll('button')), icons);
-    this.buildPickers([].slice.call(toolbar.container.querySelectorAll('select')), icons);
+    this.buildButtons([].slice.call(toolbar.container.querySelectorAll('button')), this.blessedIcons);
+    this.buildPickers([].slice.call(toolbar.container.querySelectorAll('select')), this.blessedIcons);
   }
 }
 BubbleTheme.DEFAULTS = extend(true, {}, BaseTheme.DEFAULTS, {
@@ -99,13 +102,14 @@ class BubbleTooltip extends BaseTooltip {
     arrow.style.marginLeft = (-1*shift - arrow.offsetWidth/2) + 'px';
   }
 }
-BubbleTooltip.TEMPLATE = [
+// Security: Blessed HTML is provided hardcoded here.
+BubbleTooltip.TEMPLATE = Quill.import('core/security').blessHTML([
   '<span class="ql-tooltip-arrow"></span>',
   '<div class="ql-tooltip-editor">',
     '<input type="text" data-formula="e=mc^2" data-link="https://quilljs.com" data-video="Embed URL">',
     '<a class="ql-close"></a>',
   '</div>'
-].join('');
+].join(''));
 
 
 export { BubbleTooltip, BubbleTheme as default };

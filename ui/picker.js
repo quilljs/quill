@@ -1,3 +1,4 @@
+import Quill from '../core/quill';
 import Keyboard from '../modules/keyboard';
 import DropdownIcon from '../assets/icons/dropdown.svg';
 
@@ -81,7 +82,8 @@ class Picker {
   buildLabel() {
     let label = document.createElement('span');
     label.classList.add('ql-picker-label');
-    label.innerHTML = DropdownIcon;
+    // Security: Blessed HTML is imported from a trusted file.
+    label.innerHTML = Quill.import('core/security').blessHTML(DropdownIcon);
     label.tabIndex = '0';
     label.setAttribute('role', 'button');
     label.setAttribute('aria-expanded', 'false');

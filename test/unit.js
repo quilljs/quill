@@ -11,6 +11,7 @@ import './unit/blots/block-embed.js';
 import './unit/blots/inline.js';
 
 import './unit/core/editor';
+import './unit/core/security';
 import './unit/core/selection';
 import './unit/core/quill';
 

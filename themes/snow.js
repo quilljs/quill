@@ -1,3 +1,4 @@
+import Quill from '../core/quill';
 import extend from 'extend';
 import Emitter from '../core/emitter';
 import BaseTheme, { BaseTooltip } from './base';
@@ -20,12 +21,14 @@ class SnowTheme extends BaseTheme {
     }
     super(quill, options);
     this.quill.container.classList.add('ql-snow');
+    // Security: Blessed HTML is imported from a trusted file.
+    this.blessedIcons = Quill.import('core/security').deepBless(icons);
   }
 
   extendToolbar(toolbar) {
     toolbar.container.classList.add('ql-snow');
-    this.buildButtons([].slice.call(toolbar.container.querySelectorAll('button')), icons);
-    this.buildPickers([].slice.call(toolbar.container.querySelectorAll('select')), icons);
+    this.buildButtons([].slice.call(toolbar.container.querySelectorAll('button')), this.blessedIcons);
+    this.buildPickers([].slice.call(toolbar.container.querySelectorAll('select')), this.blessedIcons);
     this.tooltip = new SnowTooltip(this.quill, this.options.bounds);
     if (toolbar.container.querySelector('.ql-link')) {
       this.quill.keyboard.addBinding({ key: 'K', shortKey: true }, function(range, context) {
@@ -109,12 +112,13 @@ class SnowTooltip extends BaseTooltip {
     this.root.removeAttribute('data-mode');
   }
 }
-SnowTooltip.TEMPLATE = [
+// Security: Blessed HTML is provided hardcoded here.
+SnowTooltip.TEMPLATE = Quill.import('core/security').blessHTML([
   '<a class="ql-preview" rel="noopener noreferrer" target="_blank" href="about:blank"></a>',
   '<input type="text" data-formula="e=mc^2" data-link="https://quilljs.com" data-video="Embed URL">',
   '<a class="ql-action"></a>',
   '<a class="ql-remove"></a>'
-].join('');
+].join(''));
 
 
 export default SnowTheme;

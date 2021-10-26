@@ -1,3 +1,4 @@
+import Quill from '../core/quill';
 import Picker from './picker';
 
 
@@ -15,7 +16,8 @@ class IconPicker extends Picker {
   selectItem(item, trigger) {
     super.selectItem(item, trigger);
     item = item || this.defaultItem;
-    this.label.innerHTML = item.innerHTML;
+    // Security: Blessed HTML is already part of the DOM.
+    this.label.innerHTML = Quill.import('core/security').blessHTML(item.innerHTML);
   }
 }
 

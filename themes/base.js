@@ -1,3 +1,4 @@
+import Quill from '../core/quill';
 import extend from 'extend';
 import Delta from 'quill-delta';
 import Emitter from '../core/emitter';
@@ -64,8 +65,9 @@ class BaseTheme extends Theme {
         name = name.slice('ql-'.length);
         if (icons[name] == null) return;
         if (name === 'direction') {
-          button.innerHTML = icons[name][''] + icons[name]['rtl'];
-        } else if (typeof icons[name] === 'string') {
+          button.innerHTML = icons[name][''];
+          button.insertAdjacentHTML('beforeend', icons[name]['rtl']);
+        } else if (typeof icons[name] === 'string' || Quill.import('core/security').isTrustedHTML(icons[name])) {
           button.innerHTML = icons[name];
         } else {
           let value = button.value || '';
