@@ -151,7 +151,7 @@ class Selection {
     }
     let side = 'left';
     let rect;
-    if (node instanceof Text) {
+    if (node instanceof Text || node.nodeName === '#text') {
       // Return null if the text node is empty because it is
       // not able to get a useful client rect:
       // https://github.com/w3c/csswg-drafts/issues/2514.
