@@ -1,4 +1,7 @@
 import Embed from '../blots/embed';
+import AsciiMathParser from '../ascii2tex/asciimath2tex';
+
+const USE_ASCII_MATHS = true;
 
 class Formula extends Embed {
   static create(value) {
@@ -7,7 +10,9 @@ class Formula extends Embed {
     }
     const node = super.create(value);
     if (typeof value === 'string') {
-      window.katex.render(value, node, {
+      let laTexValue = value;
+      if (USE_ASCII_MATHS) laTexValue = this.asciiMathsParser.parse(value);
+      window.katex.render(laTexValue, node, {
         throwOnError: false,
         errorColor: '#f00',
       });
@@ -25,6 +30,8 @@ class Formula extends Embed {
     return `<span>${formula}</span>`;
   }
 }
+
+Formula.asciiMathsParser = new AsciiMathParser();
 Formula.blotName = 'formula';
 Formula.className = 'ql-formula';
 Formula.tagName = 'SPAN';

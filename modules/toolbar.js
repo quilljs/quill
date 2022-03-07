@@ -3,6 +3,7 @@ import { EmbedBlot, Scope } from 'parchment';
 import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';
+import Formula from '../formats/formula';
 
 const debug = logger('quill:toolbar');
 
@@ -88,6 +89,7 @@ class Toolbar extends Module {
       if (this.handlers[format] != null) {
         this.handlers[format].call(this, value);
       } else if (
+        format !== Formula.blotName &&
         this.quill.scroll.query(format).prototype instanceof EmbedBlot
       ) {
         value = prompt(`Enter ${format}`); // eslint-disable-line no-alert

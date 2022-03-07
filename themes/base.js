@@ -155,9 +155,6 @@ BaseTheme.DEFAULTS = merge({}, Theme.DEFAULTS, {
   modules: {
     toolbar: {
       handlers: {
-        formula() {
-          this.quill.theme.tooltip.edit('formula');
-        },
         image() {
           let fileInput = this.container.querySelector(
             'input.ql-image[type=file]',
@@ -255,25 +252,26 @@ class BaseTooltip extends Tooltip {
       }
       case 'video': {
         value = extractVideoUrl(value);
-      } // eslint-disable-next-line no-fallthrough
-      case 'formula': {
-        if (!value) break;
-        const range = this.quill.getSelection(true);
-        if (range != null) {
-          const index = range.index + range.length;
-          this.quill.insertEmbed(
-            index,
-            this.root.getAttribute('data-mode'),
-            value,
-            Emitter.sources.USER,
-          );
-          if (this.root.getAttribute('data-mode') === 'formula') {
-            this.quill.insertText(index + 1, ' ', Emitter.sources.USER);
-          }
-          this.quill.setSelection(index + 2, Emitter.sources.USER);
-        }
         break;
-      }
+      } // eslint-disable-next-line no-fallthrough
+      // case 'formula': {
+      //   if (!value) break;
+      //   const range = this.quill.getSelection(true);
+      //   if (range != null) {
+      //     const index = range.index + range.length;
+      //     this.quill.insertEmbed(
+      //       index,
+      //       this.root.getAttribute('data-mode'),
+      //       value,
+      //       Emitter.sources.USER,
+      //     );
+      //     if (this.root.getAttribute('data-mode') === 'formula') {
+      //       this.quill.insertText(index + 1, ' ', Emitter.sources.USER);
+      //     }
+      //     this.quill.setSelection(index + 2, Emitter.sources.USER);
+      //   }
+      //   break;
+      // }
       default:
     }
     this.textbox.value = '';

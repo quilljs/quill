@@ -134,20 +134,6 @@ colorItemsPerRow = 7
       margin-bottom: 5px
       margin-top: 5px
       padding-left: 16px
-    code, .ql-code-block-container
-      background-color: #f0f0f0
-      border-radius: 3px
-    .ql-code-block-container
-      margin-bottom: 5px
-      margin-top: 5px
-      padding: 5px 10px
-    code
-      font-size: 85%
-      padding: 2px 4px
-    .ql-code-block-container
-      background-color: #23241f
-      color: #f8f8f2
-      overflow: visible
     img
       max-width: 100%
 
@@ -307,3 +293,34 @@ colorItemsPerRow = 7
   .ql-ui
     right: 5px
     top: 5px
+
+@counter-style line-numbers
+  system: numeric;
+  symbols: "0" "1" "2" "3" "4" "5" "6" "7" "8" "9"
+  pad: 3 " "
+
+code, .ql-code-block-container
+  background-color: #f0f0f0
+  border-radius: 3px
+
+.ql-code-block-container
+  margin-bottom: 5px
+  margin-top: 5px
+  padding: 5px 10px
+  counter-reset: line-counter
+  background-color: #fbfbfb
+  color: #353535
+  overflow: visible
+  white-space: pre-wrap;
+
+  .ql-code-block::before
+    counter-increment: line-counter
+    content: counter(line-counter, line-numbers) "  "
+    color: #0004ff
+  
+  .ql-code-block:nth-child(2n)
+    background-color: #eaeaea
+
+code
+  font-size: 85%
+  padding: 2px 4px

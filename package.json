@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "eventemitter3": "^4.0.0",
+    "katex": "^0.13.13",
     "lodash.clonedeep": "^4.5.0",
     "lodash.isequal": "^4.5.0",
     "lodash.merge": "^4.5.0",
@@ -153,7 +154,7 @@
     "build:webpack": "webpack --config _develop/webpack.config.js; rm dist/quill.core dist/quill.bubble dist/quill.snow",
     "build:release": "./_develop/scripts/release.sh",
     "develop": "npm run start",
-    "lint": "eslint blots core formats modules themes ui test",
+    "lint": "eslint --fix blots core formats modules themes ui test",
     "start": "npm run build:webpack; bundle exec foreman start -f _develop/procfile",
     "test": "npm run test:unit",
     "test:all": "npm run test:unit; npm run test:functional",

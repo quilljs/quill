@@ -26,6 +26,7 @@ const source = [
   'test',
   'themes',
   'ui',
+  'ascii2tex',
 ].map(file => {
   return path.resolve(__dirname, '..', file);
 });
@@ -100,6 +101,7 @@ const baseConfig = {
   mode: 'development',
   context: path.resolve(__dirname, '..'),
   entry: {
+    'asciimath2tex.js': ['./ascii2tex/asciimath2tex.js'],
     'quill.js': ['./quill.js'],
     'quill.core.js': ['./core.js'],
     'quill.core': './assets/core.styl',

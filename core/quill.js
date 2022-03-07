@@ -9,6 +9,7 @@ import Selection, { Range } from './selection';
 import instances from './instances';
 import logger from './logger';
 import Theme from './theme';
+import Formula from '../formats/formula';
 
 const debug = logger('quill');
 
@@ -194,8 +195,11 @@ class Quill {
           change = this.editor.formatText(range.index, range.length, {
             [name]: value,
           });
+          this.setSelection(range.index + 1, Emitter.sources.SILENT);
         }
-        this.setSelection(range, Emitter.sources.SILENT);
+        if (name !== Formula.blotName) {
+          this.setSelection(range, Emitter.sources.SILENT);
+        }
         return change;
       },
       source,

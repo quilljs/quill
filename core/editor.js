@@ -3,11 +3,13 @@ import isEqual from 'lodash.isequal';
 import merge from 'lodash.merge';
 import Delta, { AttributeMap, Op } from 'quill-delta';
 import { LeafBlot, Scope } from 'parchment';
+import katex from 'katex';
 import { Range } from './selection';
 import CursorBlot from '../blots/cursor';
 import Block, { BlockEmbed, bubbleFormats } from '../blots/block';
 import Break from '../blots/break';
 import TextBlot, { escapeText } from '../blots/text';
+import Formula from '../formats/formula';
 
 const ASCII = /^[ -~]*$/;
 
@@ -15,6 +17,7 @@ class Editor {
   constructor(scroll) {
     this.scroll = scroll;
     this.delta = this.getDelta();
+    window.katex = katex;
   }
 
   applyDelta(delta) {
@@ -95,7 +98,11 @@ class Editor {
 
   formatText(index, length, formats = {}) {
     Object.keys(formats).forEach(format => {
-      this.scroll.formatAt(index, length, format, formats[format]);
+      if (format === Formula.blotName) {
+        const text = this.getText(index, length);
+        this.deleteText(index, length);
+        this.insertEmbed(index, format, text);
+      } else this.scroll.formatAt(index, length, format, formats[format]);
     });
     const delta = new Delta().retain(index).retain(length, cloneDeep(formats));
     return this.update(delta);

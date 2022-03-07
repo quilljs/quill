@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Quill Demo</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link href="./node_modules/katex/dist/katex.min.css" rel="stylesheet">
+    <link href="./dist/quill.snow.css" rel="stylesheet">
+    <script src='./dist/quill.js'></script>
+</head>
+
+<style>
+    #container {
+        max-width: 800px;
+        padding: 50px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+    }
+    #editor {
+        min-height: 400px;
+    }
+</style>
+
+<body>
+
+    <!-- Create the editor container -->
+    <div id="container">
+        <div id="editor"></div>
+    </div>
+
+    <!-- Initialize Quill editor -->
+    <script>
+        var quill = new Quill('#editor', {
+            modules: {
+                toolbar: [
+                    [{ header: [1, 2, false] }],
+                    ['bold', 'italic', 'underline'],
+                    ['image', 'code-block'],
+                    ['formula']
+                ]
+            },
+            placeholder: 'Compose an epic...',
+            theme: 'snow'  // or 'bubble'
+        });
+    </script>
+
+</body>
+
+</html>
