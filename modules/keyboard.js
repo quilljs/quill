@@ -50,7 +50,7 @@ class Keyboard extends Module {
     } else {
       this.addBinding(
         { key: 'Backspace' },
-        { collapsed: true, prefix: /^.?$/ },
+        { collapsed: true },
         this.handleBackspace,
       );
       this.addBinding(
