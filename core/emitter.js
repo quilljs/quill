@@ -30,7 +30,7 @@ class Emitter extends EventEmitter {
 
   handleDOM(event, ...args) {
     (this.listeners[event.type] || []).forEach(({ node, handler }) => {
-      if (event.target === node || node.contains(event.target)) {
+      if (node && (event.target === node || node.contains(event.target))) {
         handler(event, ...args);
       }
     });
