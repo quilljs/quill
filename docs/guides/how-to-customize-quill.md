@@ -147,6 +147,4 @@ var quill = new Quill('#editor', {
 });
 ```
 
-You can view a list of Blots and Attributors available by calling `console.log(Quill.imports);`. Direct modification of this object is not supported. Use [`Quill.register`](/docs/api/#register) instead.
-
 A complete reference on Parchment, Blots and Attributors can be found on Parchment's own [README](https://github.com/quilljs/parchment/). For an in-depth walkthrough, take a look at [Cloning Medium with Parchment](/guides/cloning-medium-with-parchment/), which starts with Quill understanding just plain text, to adding all of the formats [Medium](https://medium.com/) supports. Most of the time, you will not have to build formats from scratch since most are already implemented in Quill, but it is still useful to understanding how Quill works at this deeper level.

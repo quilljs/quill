@@ -13,6 +13,7 @@ import './unit/blots/inline';
 import './unit/core/editor';
 import './unit/core/selection';
 import './unit/core/quill';
+import './unit/core/theme';
 
 import './unit/formats/color';
 import './unit/formats/link';
@@ -36,7 +37,6 @@ import './unit/ui/picker';
 import './unit/theme/base/tooltip';
 
 // Syntax version will otherwise be registered
-Quill.register(CodeBlockContainer, true);
 Quill.register(CodeBlock, true);
 
 export default Quill;

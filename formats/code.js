@@ -28,8 +28,8 @@ class CodeBlockContainer extends Container {
 }
 
 class CodeBlock extends Block {
-  static register() {
-    Quill.register(CodeBlockContainer);
+  static register(options) {
+    Quill.register(CodeBlockContainer, options);
   }
 }
 

@@ -14,7 +14,7 @@ import History from './modules/history';
 import Keyboard from './modules/keyboard';
 import Uploader from './modules/uploader';
 
-Quill.register({
+Object.assign(Quill.defaultDefinitions, {
   'blots/block': Block,
   'blots/block/embed': BlockEmbed,
   'blots/break': Break,

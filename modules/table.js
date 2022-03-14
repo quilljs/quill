@@ -10,11 +10,11 @@ import {
 } from '../formats/table';
 
 class Table extends Module {
-  static register() {
-    Quill.register(TableCell);
-    Quill.register(TableRow);
-    Quill.register(TableBody);
-    Quill.register(TableContainer);
+  static register(options) {
+    Quill.register(TableCell, options);
+    Quill.register(TableRow, options);
+    Quill.register(TableBody, options);
+    Quill.register(TableContainer, options);
   }
 
   constructor(...args) {

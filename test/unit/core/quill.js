@@ -5,14 +5,9 @@ import Emitter from '../../../core/emitter';
 import Toolbar from '../../../modules/toolbar';
 import Snow from '../../../themes/snow';
 import { Range } from '../../../core/selection';
+import Bold from '../../../formats/bold';
 
 describe('Quill', function() {
-  it('imports', function() {
-    Object.keys(Quill.imports).forEach(function(path) {
-      expect(Quill.import(path)).toBeTruthy();
-    });
-  });
-
   describe('construction', function() {
     it('empty', function() {
       const quill = this.initialize(Quill, '');
@@ -41,6 +36,42 @@ describe('Quill', function() {
         new Delta().insert('Test').insert('\n', { align: 'center' }),
       );
       expect(quill.root).toEqualHTML('<p class="ql-align-center">Test</p>');
+    });
+  });
+
+  describe('namespaces', function() {
+    it('has a default namespace', function() {
+      const { imports } = Quill.getNamespace();
+      Object.keys(imports).forEach(function(path) {
+        expect(Quill.import(path)).toBeTruthy();
+      });
+
+      Object.keys(Quill.defaultDefinitions).forEach(function(path) {
+        expect(Quill.import(path)).toBeTruthy();
+      });
+    });
+
+    it('accepts other namespaces', function() {
+      const namespace = 'myspace';
+
+      const { defaultDefinitions } = Quill;
+      Quill.defaultDefinitions = {};
+      const { imports } = Quill.getNamespace(namespace);
+      Quill.defaultDefinitions = defaultDefinitions;
+
+      expect(Object.keys(imports).length).toEqual(0);
+      Quill.register(Bold, { namespace });
+      expect(Object.keys(imports).length).toEqual(1);
+
+      class CustomBlot extends Bold {}
+      CustomBlot.blotName = 'customBlot';
+      Quill.register(CustomBlot, { namespace });
+      expect(Quill.import(`formats/${CustomBlot.blotName}`)).toBeFalsy();
+      expect(
+        Quill.import(`formats/${CustomBlot.blotName}`, {
+          namespace,
+        }),
+      ).toBeTruthy();
     });
   });
 

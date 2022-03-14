@@ -17,8 +17,8 @@ class ListItem extends Block {
     return domNode.getAttribute('data-list') || undefined;
   }
 
-  static register() {
-    Quill.register(ListContainer);
+  static register(options) {
+    Quill.register(ListContainer, options);
   }
 
   constructor(scroll, domNode) {

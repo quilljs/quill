@@ -12,7 +12,20 @@ import Theme from './theme';
 
 const debug = logger('quill');
 
-const globalRegistry = new Parchment.Registry();
+const defaultNamespace = Symbol('defaultNamespace');
+
+const namespaces = {
+  [defaultNamespace]: {
+    registry: null,
+    imports: {
+      delta: Delta,
+      parchment: Parchment,
+      'core/module': Module,
+      'core/theme': Theme,
+    },
+  },
+};
+
 Parchment.ParentBlot.uiClass = 'ql-ui';
 
 class Quill {
@@ -23,18 +36,33 @@ class Quill {
     logger.level(limit);
   }
 
-  static find(node) {
-    return instances.get(node) || globalRegistry.find(node);
+  static getNamespace(namespace = defaultNamespace) {
+    if (!namespaces[namespace]) {
+      namespaces[namespace] = { registry: null, imports: {} };
+    }
+    if (!namespaces[namespace].registry) {
+      namespaces[namespace].registry = new Parchment.Registry();
+      Object.keys(this.defaultDefinitions).forEach(path => {
+        this.register(path, this.defaultDefinitions[path], { namespace });
+      });
+    }
+
+    return namespaces[namespace];
   }
 
-  static import(name) {
-    if (this.imports[name] == null) {
+  static find(node) {
+    return instances.get(node) || this.getNamespace().registry.find(node);
+  }
+
+  static import(name, options = {}) {
+    const { imports } = this.getNamespace(options.namespace);
+    if (imports[name] == null) {
       debug.error(`Cannot import ${name}. Are you sure it was registered?`);
     }
-    return this.imports[name];
+    return imports[name];
   }
 
-  static register(path, target, overwrite = false) {
+  static register(path, target, options = {}) {
     if (typeof path !== 'string') {
       const name = path.attrName || path.blotName;
       if (typeof name === 'string') {
@@ -46,18 +74,24 @@ class Quill {
         });
       }
     } else {
-      if (this.imports[path] != null && !overwrite) {
+      if (typeof options === 'boolean') {
+        options = { overwrite: options };
+      }
+      const { overwrite = false, namespace } = options;
+      const { registry, imports } = this.getNamespace(namespace);
+      if (imports[path] != null && !overwrite) {
         debug.warn(`Overwriting ${path} with`, target);
       }
-      this.imports[path] = target;
+      imports[path] = target;
+
       if (
         (path.startsWith('blots/') || path.startsWith('formats/')) &&
         target.blotName !== 'abstract'
       ) {
-        globalRegistry.register(target);
+        registry.register(target);
       }
       if (typeof target.register === 'function') {
-        target.register(globalRegistry);
+        target.register(options);
       }
     }
   }
@@ -79,10 +113,9 @@ class Quill {
     this.root.classList.add('ql-blank');
     this.scrollingContainer = this.options.scrollingContainer || this.root;
     this.emitter = new Emitter();
-    const ScrollBlot = this.options.registry.query(
-      Parchment.ScrollBlot.blotName,
-    );
-    this.scroll = new ScrollBlot(this.options.registry, this.root, {
+    const { registry } = Quill.getNamespace(this.options.namespace);
+    const ScrollBlot = registry.query(Parchment.ScrollBlot.blotName);
+    this.scroll = new ScrollBlot(registry, this.root, {
       emitter: this.emitter,
     });
     this.editor = new Editor(this.scroll);
@@ -439,21 +472,14 @@ Quill.DEFAULTS = {
   modules: {},
   placeholder: '',
   readOnly: false,
-  registry: globalRegistry,
   scrollingContainer: null,
   theme: 'default',
 };
 Quill.events = Emitter.events;
 Quill.sources = Emitter.sources;
+Quill.defaultDefinitions = {};
 // eslint-disable-next-line no-undef
 Quill.version = typeof QUILL_VERSION === 'undefined' ? 'dev' : QUILL_VERSION;
-
-Quill.imports = {
-  delta: Delta,
-  parchment: Parchment,
-  'core/module': Module,
-  'core/theme': Theme,
-};
 
 function expandConfig(container, userConfig) {
   userConfig = merge(
@@ -468,10 +494,13 @@ function expandConfig(container, userConfig) {
     },
     userConfig,
   );
+  const { namespace } = userConfig;
   if (!userConfig.theme || userConfig.theme === Quill.DEFAULTS.theme) {
     userConfig.theme = Theme;
   } else {
-    userConfig.theme = Quill.import(`themes/${userConfig.theme}`);
+    userConfig.theme = Quill.import(`themes/${userConfig.theme}`, {
+      namespace,
+    });
     if (userConfig.theme == null) {
       throw new Error(
         `Invalid theme ${userConfig.theme}. Did you register it?`,
@@ -491,7 +520,7 @@ function expandConfig(container, userConfig) {
     Object.keys(userConfig.modules),
   );
   const moduleConfig = moduleNames.reduce((config, name) => {
-    const moduleClass = Quill.import(`modules/${name}`);
+    const moduleClass = Quill.import(`modules/${name}`, { namespace });
     if (moduleClass == null) {
       debug.error(
         `Cannot load ${name} module. Are you sure you registered it?`,
@@ -626,4 +655,4 @@ function shiftRange(range, index, length, source) {
   return new Range(start, end - start);
 }
 
-export { globalRegistry, expandConfig, overload, Quill as default };
+export { expandConfig, overload, Quill as default };

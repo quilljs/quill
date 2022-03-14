@@ -3,7 +3,7 @@ import Editor from '../../core/editor';
 import Emitter from '../../core/emitter';
 import Selection from '../../core/selection';
 import Scroll from '../../blots/scroll';
-import Quill, { globalRegistry } from '../../core/quill';
+import Quill from '../../core/quill';
 
 const div = document.createElement('div');
 div.id = 'test-container';
@@ -124,7 +124,9 @@ function initialize(klass, html, container = this.container, options = {}) {
   if (klass === HTMLElement) return container;
   if (klass === Quill) return new Quill(container, options);
   const emitter = new Emitter();
-  const scroll = new Scroll(globalRegistry, container, { emitter });
+  const scroll = new Scroll(Quill.getNamespace().registry, container, {
+    emitter,
+  });
   if (klass === Scroll) return scroll;
   if (klass === Editor) return new Editor(scroll);
   if (klass === Selection) return new Selection(scroll, emitter);
