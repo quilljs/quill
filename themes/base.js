@@ -2,6 +2,7 @@ import merge from 'lodash.merge';
 import Emitter from '../core/emitter';
 import Theme from '../core/theme';
 import ColorPicker from '../ui/color-picker';
+import LineHeightPicker from '../ui/line-height-picker';
 import IconPicker from '../ui/icon-picker';
 import Picker from '../ui/picker';
 import Tooltip from '../ui/tooltip';
@@ -51,6 +52,8 @@ const FONTS = [false, 'serif', 'monospace'];
 const HEADERS = ['1', '2', '3', false];
 
 const SIZES = ['small', false, 'large', 'huge'];
+
+const LINE_HEIGHTS = ['1', '1.15', '1.5', '2', '2.5', '3'];
 
 class BaseTheme extends Theme {
   constructor(quill, options) {
@@ -131,6 +134,12 @@ class BaseTheme extends Theme {
           );
         }
         return new ColorPicker(select, icons[format]);
+      }
+      if (select.classList.contains('ql-line-height')) {
+        if (select.querySelector('option') == null) {
+          fillSelect(select, LINE_HEIGHTS);
+        }
+        return new LineHeightPicker(select, icons.lineHeight);
       }
       if (select.querySelector('option') == null) {
         if (select.classList.contains('ql-font')) {

@@ -17,6 +17,7 @@ import italicIcon from '../assets/icons/italic.svg';
 import imageIcon from '../assets/icons/image.svg';
 import indentIcon from '../assets/icons/indent.svg';
 import outdentIcon from '../assets/icons/outdent.svg';
+import lineHeightIcon from '../assets/icons/line-height.svg';
 import linkIcon from '../assets/icons/link.svg';
 import listBulletIcon from '../assets/icons/list-bullet.svg';
 import listCheckIcon from '../assets/icons/list-check.svg';
@@ -57,6 +58,7 @@ export default {
     '+1': indentIcon,
     '-1': outdentIcon,
   },
+  lineHeight: lineHeightIcon,
   link: linkIcon,
   list: {
     bullet: listBulletIcon,

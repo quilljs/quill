@@ -150,6 +150,19 @@ colorItemsPerRow = 7
       overflow: visible
     img
       max-width: 100%
+    .ql-line-height-1
+      line-height: 1
+    .ql-line-height-1_15
+      line-height: 1.15
+    .ql-line-height-1_5
+      line-height: 1.5
+    .ql-line-height-2
+      line-height: 2
+    .ql-line-height-2_5
+      line-height: 2.5
+    .ql-line-height-3
+      line-height: 3
+
 
   .ql-picker
     color: inactiveColor
@@ -197,7 +210,7 @@ colorItemsPerRow = 7
       top: 100%
       z-index: 1
 
-  .ql-color-picker, .ql-icon-picker
+  .ql-color-picker, .ql-icon-picker, .ql-line-height
     width: controlHeight + 4
     .ql-picker-label
       padding: 2px 4px
@@ -222,7 +235,7 @@ colorItemsPerRow = 7
       padding: 0px
       width: colorItemSize
 
-  .ql-picker:not(.ql-color-picker):not(.ql-icon-picker)
+  .ql-picker:not(.ql-color-picker):not(.ql-icon-picker):not(.ql-line-height)
     svg
       position: absolute
       margin-top: -9px
@@ -294,6 +307,20 @@ colorItemsPerRow = 7
       font-size: 18px
     .ql-picker-item[data-value=huge]::before
       font-size: 32px
+
+  .ql-picker.ql-line-height
+    .ql-picker-item[data-value='1']::after
+      content: '1'
+    .ql-picker-item[data-value='1.15']::after
+      content: '1.15'
+    .ql-picker-item[data-value='1.5']::after
+      content: '1.5'
+    .ql-picker-item[data-value='2']::after
+      content: '2'
+    .ql-picker-item[data-value='2.5']::after
+      content: '2.5'
+    .ql-picker-item[data-value='3']::after
+      content: '3'
 
   .ql-color-picker.ql-background
     .ql-picker-item
