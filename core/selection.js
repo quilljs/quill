@@ -99,9 +99,9 @@ class Selection {
     });
   }
 
-  focus() {
+  focus(options = {}) {
     if (this.hasFocus()) return;
-    this.root.focus();
+    this.root.focus(options);
     this.setRange(this.savedRange);
   }
 
