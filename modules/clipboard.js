@@ -68,6 +68,7 @@ class Clipboard extends Module {
     this.quill.root.addEventListener('cut', e => this.onCaptureCopy(e, true));
     this.quill.root.addEventListener('paste', this.onCapturePaste.bind(this));
     this.matchers = [];
+    this.disableFormattingOnPaste = this.options.disableFormattingOnPaste
     CLIPBOARD_CONFIG.concat(this.options.matchers).forEach(
       ([selector, matcher]) => {
         this.addMatcher(selector, matcher);
@@ -80,6 +81,11 @@ class Clipboard extends Module {
   }
 
   convert({ html, text }, formats = {}) {
+    // First of all, check if we set disable to format
+    // and if we do then always paste pure text without formatting
+    if (this.disableFormattingOnPaste) {
+      return new Delta().insert(text || '');
+    }
     if (formats[CodeBlock.blotName]) {
       return new Delta().insert(text, {
         [CodeBlock.blotName]: formats[CodeBlock.blotName],
