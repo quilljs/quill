@@ -469,10 +469,10 @@ function matchStyles(node, delta) {
   if (style.fontStyle === 'italic') {
     formats.italic = true;
   }
-  if (style.textDecoration === 'underline') {
+  if (style.textDecoration.indexOf('underline') !== -1) {
     formats.underline = true;
   }
-  if (style.textDecoration === 'line-through') {
+  if (style.textDecoration.indexOf('line-through') !== -1) {
     formats.strike = true;
   }
   if (

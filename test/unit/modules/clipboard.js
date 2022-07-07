@@ -378,6 +378,23 @@ describe('Clipboard', function() {
       expect(delta).toEqual(new Delta().insert('Test', { color: 'blue' }));
     });
 
+    it('text decoration', function() {
+      const delta = this.clipboard.convert({
+        html: `
+        <span style="text-decoration: underline;">underline</span>
+        <span style="text-decoration: line-through;">strike</span>
+        <span style="text-decoration: underline line-through;">mixed</span>
+        `,
+      });
+
+      expect(delta).toEqual(
+        new Delta()
+          .insert('underline', { underline: true })
+          .insert('strike', { strike: true })
+          .insert('mixed', { strike: true, underline: true }),
+      );
+    });
+
     it('custom matcher', function() {
       this.clipboard.addMatcher(Node.TEXT_NODE, function(node, delta) {
         let index = 0;
