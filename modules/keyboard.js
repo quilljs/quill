@@ -110,7 +110,12 @@ class Keyboard extends Module {
 
   listen() {
     this.quill.root.addEventListener('keydown', evt => {
-      if (evt.defaultPrevented || evt.isComposing) return;
+      if (
+        evt.defaultPrevented ||
+        evt.isComposing ||
+        (evt.key === 'Enter' && evt.keyCode === 229) // handle safari composition end with Enter
+      )
+        return;
       const bindings = (this.bindings[evt.key] || []).concat(
         this.bindings[evt.which] || [],
       );
