@@ -603,7 +603,12 @@ function makeEmbedArrowHandler(key, shiftKey) {
         index += range.length + 1;
       }
       const [leaf] = this.quill.getLeaf(index);
-      if (!(leaf instanceof EmbedBlot)) return true;
+
+      // NOTE: a line break is not an EmbedBlot that needs special handling
+      if (!(leaf instanceof EmbedBlot) || leaf.statics.tagName === 'BR') {
+        return true;
+      }
+
       if (key === 'ArrowLeft') {
         if (shiftKey) {
           this.quill.setSelection(
