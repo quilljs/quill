@@ -27,7 +27,7 @@ Themes allow you to easily make your editor look good with minimal effort. Quill
 
 ```html
 <!-- Add the theme's stylesheet -->
-<link rel="stylesheet" href="{{site.cdn}}{{site.version}}/quill.bubble.css">
+<link rel="stylesheet" href="https:{{site.cdn}}{{site.version}}/quill.bubble.css">
 
 <script src="{{site.cdn}}{{site.version}}/quill.js"></script>
 <script>
