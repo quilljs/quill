@@ -15,6 +15,15 @@ By default all formats are enabled and allowed to exist within a Quill editor an
 
 <a class="standalone-link" href="/standalone/full/">Standalone</a>
 
+To define formats on configuration:
+
+```javascript
+var options = {
+  formats: ['bold', 'italic', 'underline', 'color']
+};
+var editor = new Quill('#editor', options);
+```
+
 #### Inline
 
   - Background Color - `background`
