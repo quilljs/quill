@@ -38,6 +38,7 @@ var options = {
     toolbar: '#toolbar'
   },
   placeholder: 'Compose an epic...',
+  formats: ['bold', 'italic', 'underline', 'color']
   readOnly: true,
   theme: 'snow'
 };
