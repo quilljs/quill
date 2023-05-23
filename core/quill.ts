@@ -223,7 +223,7 @@ class Quill {
     }
     this.history.clear();
     if (this.options.placeholder) {
-      this.root.setAttribute('data-placeholder', this.options.placeholder);
+      this.setPlaceholder(this.options.placeholder);
     }
     if (this.options.readOnly) {
       this.disable();
@@ -660,6 +660,16 @@ class Quill {
   setText(text: string, source: EmitterSource = Emitter.sources.API) {
     const delta = new Delta().insert(text);
     return this.setContents(delta, source);
+  }
+
+  setPlaceholder(placeholder: string | null) {
+    if (placeholder) {
+      this.root.setAttribute('data-placeholder', placeholder);
+      this.root.setAttribute('aria-placeholder', placeholder);
+    } else {
+      this.root.removeAttribute('data-placeholder');
+      this.root.removeAttribute('aria-placeholder');
+    }
   }
 
   update(source: EmitterSource = Emitter.sources.USER) {

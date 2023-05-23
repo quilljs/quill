@@ -902,7 +902,26 @@ describe('Quill', function() {
       expect(this.quill.root.dataset.placeholder).toEqual(
         'a great day to be a placeholder',
       );
+      expect(this.quill.root.getAttribute('aria-placeholder')).toEqual(
+        'a great day to be a placeholder',
+      );
       expect(this.quill.root.classList).toContain('ql-blank');
+    });
+
+    it('update placeholder', function() {
+      this.quill.setPlaceholder('this is an updated placeholder');
+      expect(this.quill.root.dataset.placeholder).toEqual(
+        'this is an updated placeholder',
+      );
+      expect(this.quill.root.getAttribute('aria-placeholder')).toEqual(
+        'this is an updated placeholder',
+      );
+    });
+
+    it('remove placeholder', function() {
+      this.quill.setPlaceholder('');
+      expect(this.quill.root.dataset.placeholder).not.toBeDefined();
+      expect(this.quill.root.hasAttribute('aria-placeholder')).toBe(false);
     });
 
     it('with text', function() {
