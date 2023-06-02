@@ -4,7 +4,7 @@ import Theme from '../../../core/theme';
 import Emitter from '../../../core/emitter';
 import Toolbar from '../../../modules/toolbar';
 import Snow from '../../../themes/snow';
-import { Range } from '../../../core/selection';
+import { Range } from '../../../modules/selection';
 
 describe('Quill', function () {
   it('imports', function () {

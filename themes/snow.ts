@@ -2,7 +2,7 @@ import merge from 'lodash.merge';
 import Emitter from '../core/emitter';
 import BaseTheme, { BaseTooltip } from './base';
 import LinkBlot from '../formats/link';
-import { Range } from '../core/selection';
+import { Range } from '../modules/selection';
 import icons from '../ui/icons';
 
 const TOOLBAR_CONFIG = [

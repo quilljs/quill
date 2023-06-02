@@ -1,5 +1,5 @@
 import Emitter from '../../../core/emitter';
-import Selection, { Range } from '../../../core/selection';
+import Selection, { Range } from '../../../modules/selection';
 import Cursor from '../../../blots/cursor';
 import Scroll from '../../../blots/scroll';
 

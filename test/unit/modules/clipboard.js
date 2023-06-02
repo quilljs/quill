@@ -1,5 +1,5 @@
 import Delta from 'quill-delta';
-import { Range } from '../../../core/selection';
+import { Range } from '../../../modules/selection';
 import Quill from '../../../core';
 
 describe('Clipboard', function () {

@@ -1,7 +1,7 @@
 import isEqual from 'lodash.isequal';
 import Editor from '../../core/editor';
 import Emitter from '../../core/emitter';
-import Selection from '../../core/selection';
+import Selection from '../../modules/selection';
 import Scroll from '../../blots/scroll';
 import Quill, { globalRegistry } from '../../core/quill';
 

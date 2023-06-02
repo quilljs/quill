@@ -8,7 +8,7 @@ import Break from '../blots/break';
 import CursorBlot from '../blots/cursor';
 import Scroll from '../blots/scroll';
 import TextBlot, { escapeText } from '../blots/text';
-import { Range } from './selection';
+import { Range } from '../modules/selection';
 
 const ASCII = /^[ -~]*$/;
 

@@ -9,6 +9,7 @@ import Inline from './blots/inline';
 import Scroll from './blots/scroll';
 import TextBlot from './blots/text';
 
+import Selection from './modules/selection';
 import Clipboard from './modules/clipboard';
 import History from './modules/history';
 import Keyboard from './modules/keyboard';
@@ -28,6 +29,7 @@ Quill.register({
   'blots/scroll': Scroll,
   'blots/text': TextBlot,
 
+  'modules/selection': Selection,
   'modules/clipboard': Clipboard,
   'modules/history': History,
   'modules/keyboard': Keyboard,

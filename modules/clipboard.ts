@@ -13,7 +13,7 @@ import { EmitterSource } from '../core/emitter';
 import logger from '../core/logger';
 import Module from '../core/module';
 import Quill from '../core/quill';
-import { Range } from '../core/selection';
+import { Range } from '../modules/selection';
 import { AlignAttribute, AlignStyle } from '../formats/align';
 import { BackgroundStyle } from '../formats/background';
 import CodeBlock from '../formats/code';

@@ -1,6 +1,6 @@
 import { EmbedBlot, Scope, ScrollBlot } from 'parchment';
 import { Parent } from 'parchment/dist/typings/blot/abstract/blot';
-import Selection from '../core/selection';
+import Selection from '../modules/selection';
 import TextBlot from './text';
 
 class Cursor extends EmbedBlot {

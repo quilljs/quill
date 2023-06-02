@@ -1,6 +1,6 @@
 import Delta from 'quill-delta';
 import Editor from '../../../core/editor';
-import Selection, { Range } from '../../../core/selection';
+import Selection, { Range } from '../../../modules/selection';
 
 describe('Editor', function () {
   describe('insert', function () {

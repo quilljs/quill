@@ -3,6 +3,7 @@ import Clipboard from '../modules/clipboard';
 import History from '../modules/history';
 import Keyboard from '../modules/keyboard';
 import Uploader from '../modules/uploader';
+import Selection from '../modules/selection';
 
 interface ThemeOptions {
   modules: Record<string, unknown>;
@@ -33,6 +34,7 @@ class Theme {
   addModule(name: 'keyboard'): Keyboard;
   addModule(name: 'uploader'): Uploader;
   addModule(name: 'history'): History;
+  addModule(name: 'selection'): Selection;
   addModule(name: string): unknown;
   addModule(name: string) {
     // @ts-expect-error

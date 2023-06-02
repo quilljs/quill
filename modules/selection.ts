@@ -1,10 +1,11 @@
 import { LeafBlot, Scope } from 'parchment';
 import cloneDeep from 'lodash.clonedeep';
 import isEqual from 'lodash.isequal';
-import Emitter, { EmitterSource } from './emitter';
-import logger from './logger';
+import Emitter, { EmitterSource } from '../core/emitter';
+import logger from '../core/logger';
 import Cursor from '../blots/cursor';
 import Scroll from '../blots/scroll';
+import Module from '../core/module';
 
 const debug = logger('quill:selection');
 
@@ -23,7 +24,7 @@ class Range {
   constructor(public index: number, public length = 0) {}
 }
 
-class Selection {
+class Selection extends Module {
   scroll: Scroll;
   emitter: Emitter;
   composing: boolean;
@@ -35,9 +36,10 @@ class Selection {
   lastRange: Range | null;
   lastNative: NormalizedRange | null;
 
-  constructor(scroll: Scroll, emitter: Emitter) {
-    this.emitter = emitter;
-    this.scroll = scroll;
+  constructor(quill, options) {
+    super(quill, options);
+    this.emitter = quill.emitter;
+    this.scroll = quill.scroll;
     this.composing = false;
     this.mouseDown = false;
     this.root = this.scroll.domNode;

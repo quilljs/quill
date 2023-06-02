@@ -6,7 +6,7 @@ import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';
 import { BlockEmbed } from '../blots/block';
-import { Range } from '../core/selection';
+import { Range } from '../modules/selection';
 
 const debug = logger('quill:keyboard');
 

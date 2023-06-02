@@ -6,7 +6,7 @@ import ColorPicker from '../ui/color-picker';
 import IconPicker from '../ui/icon-picker';
 import Picker from '../ui/picker';
 import Tooltip from '../ui/tooltip';
-import { Range } from '../core/selection';
+import { Range } from '../modules/selection';
 
 const ALIGNS = [false, 'center', 'right', 'justify'];
 
