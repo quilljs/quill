@@ -202,7 +202,7 @@ var quill = new Quill('#editor', {
 // Handlers can also be added post initialization
 var toolbar = quill.getModule('toolbar');
 toolbar.addHandler('image', showImageUI);
-```
+
 
 <!-- script -->
 <script src="{{site.cdn}}{{site.version}}/{{site.quill}}"></script>
@@ -215,3 +215,4 @@ toolbar.addHandler('image', showImageUI);
   });
 </script>
 <!-- script -->
+```
