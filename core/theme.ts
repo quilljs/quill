@@ -3,6 +3,7 @@ import Clipboard from '../modules/clipboard';
 import History from '../modules/history';
 import Keyboard from '../modules/keyboard';
 import Uploader from '../modules/uploader';
+import Composition from './composition';
 
 interface ThemeOptions {
   modules: Record<string, unknown>;
@@ -30,6 +31,7 @@ class Theme {
   }
 
   addModule(name: 'clipboard'): Clipboard;
+  addModule(name: 'composition'): Composition;
   addModule(name: 'keyboard'): Keyboard;
   addModule(name: 'uploader'): Uploader;
   addModule(name: 'history'): History;
