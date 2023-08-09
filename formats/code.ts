@@ -31,7 +31,7 @@ class CodeBlockContainer extends Container {
 }
 
 class CodeBlock extends Block {
-  static TAB = '  ';
+  static TAB = '\t';
 
   static register() {
     Quill.register(CodeBlockContainer);
