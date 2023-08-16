@@ -328,6 +328,9 @@ function extractVideoUrl(url: string) {
     url.match(
       /^(?:(https?):\/\/)?(?:(?:www|m)\.)?youtube\.com\/watch.*v=([a-zA-Z0-9_-]+)/,
     ) ||
+    url.match(
+      /^(?:(https?):\/\/)?(?:(?:www|m)\.)?youtube\.com\/shorts\/([a-zA-Z0-9_-]+)/,
+    ) ||
     url.match(/^(?:(https?):\/\/)?(?:(?:www|m)\.)?youtu\.be\/([a-zA-Z0-9_-]+)/);
   if (match) {
     return `${match[1] || 'https'}://www.youtube.com/embed/${
