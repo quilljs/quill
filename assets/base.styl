@@ -15,38 +15,40 @@ colorItemsPerRow = 7
     content: ''
     display: table
 
-  button
-    background: none
-    border: none
-    cursor: pointer
-    display: inline-block
-    float: left
-    height: controlHeight
-    padding: inputPaddingHeight inputPaddingWidth
-    width: controlHeight + (inputPaddingWidth - inputPaddingHeight)*2
-
-    svg
+  .ql-formats
+    button
+      background: none
+      border: none
+      cursor: pointer
+      display: inline-block
       float: left
-      height: 100%
+      height: controlHeight
+      padding: inputPaddingHeight inputPaddingWidth
+      width: controlHeight + (inputPaddingWidth - inputPaddingHeight)*2
 
-    &:active:hover
-      outline: none
+      svg
+        float: left
+        height: 100%
+
+      &:active:hover
+        outline: none
 
   input.ql-image[type=file]
     display: none
 
-  button:hover, button:focus, button.ql-active,
-  .ql-picker-label:hover, .ql-picker-label.ql-active,
-  .ql-picker-item:hover, .ql-picker-item.ql-selected
-    color: activeColor
-    .ql-fill, .ql-stroke.ql-fill
-      fill: activeColor
-    .ql-stroke, .ql-stroke-miter
-      stroke: activeColor
+  .ql-formats
+    button:hover, button:focus, button.ql-active,
+    .ql-picker-label:hover, .ql-picker-label.ql-active,
+    .ql-picker-item:hover, .ql-picker-item.ql-selected
+      color: activeColor
+      .ql-fill, .ql-stroke.ql-fill
+        fill: activeColor
+      .ql-stroke, .ql-stroke-miter
+        stroke: activeColor
 
 // Fix for iOS not losing hover on touch
 @media (pointer: coarse)
-  .ql-{themeName}.ql-toolbar, .ql-{themeName} .ql-toolbar
+  .ql-{themeName}.ql-toolbar .ql-formats, .ql-{themeName} .ql-toolbar .ql-formats
     button:hover:not(.ql-active)
       color: inactiveColor
       .ql-fill, .ql-stroke.ql-fill
