@@ -7,9 +7,9 @@ import slug from '../utils/slug';
 
 const pens = [
   { title: 'Autosave', hash: 'RRYBEP' },
-  { title: 'Class vs Inline Style', hash: 'jAvpQL' },
-  { title: 'Form Submit', hash: 'kXRjQJ' },
-  { title: 'Snow Toolbar Tooltips', hash: 'ozYEro' },
+  { title: 'Class vs Inline Style', hash: 'jrvpQL' },
+  { title: 'Form Submit', hash: 'ZOMjmo' },
+  { title: 'Snow Toolbar Tooltips', hash: 'ozYEMo' },
   { title: 'Autogrow Height', hash: 'dOqrVm' },
   { title: 'Custom Fonts', hash: 'gLBYam' },
   { title: 'Quill Playground', hash: 'KzZqZx' },
