@@ -1,0 +1,26 @@
+$themeName: 'snow';
+$tooltipMargin: 8px;
+
+$activeColor: #06c;
+$borderColor: #ccc;
+$borderColorActive: #000;
+$backgroundColor: #fff;
+$inactiveColor: #444;
+$shadowColor: #ddd;
+$textColor: #444;
+$tooltipBackground: #fff;
+
+@import 'core.scss';
+@import 'base';
+@import 'snow/toolbar';
+@import 'snow/tooltip';
+
+.ql-snow {
+  a {
+    color: $activeColor;
+  }
+}
+
+.ql-container.ql-snow {
+  border: 1px solid $borderColor;
+}

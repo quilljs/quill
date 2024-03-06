@@ -21,19 +21,19 @@ const svgRules = {
   ],
 };
 
-const stylRules = {
-  test: /\.styl$/,
+const scssRules = {
+  test: /\.scss$/,
   include: [resolve(__dirname, 'src/assets')],
-  use: [MiniCssExtractPlugin.loader, 'css-loader', 'stylus-loader'],
+  use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
 };
 
 export default {
   entry: {
     quill: './src/quill.ts',
     'quill.core': './src/core.ts',
-    'quill.core.css': './src/assets/core.styl',
-    'quill.bubble.css': './src/assets/bubble.styl',
-    'quill.snow.css': './src/assets/snow.styl',
+    'quill.core.css': './src/assets/core.scss',
+    'quill.bubble.css': './src/assets/bubble.scss',
+    'quill.snow.css': './src/assets/snow.scss',
   },
   output: {
     filename: '[name].js',
@@ -46,10 +46,10 @@ export default {
     clean: true,
   },
   resolve: {
-    extensions: ['.js', '.styl', '.ts'],
+    extensions: ['.js', '.scss', '.ts'],
   },
   module: {
-    rules: [tsRules, stylRules, svgRules],
+    rules: [tsRules, scssRules, svgRules],
   },
   plugins: [
     new MiniCssExtractPlugin({
