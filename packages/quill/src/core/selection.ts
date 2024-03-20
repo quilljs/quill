@@ -73,9 +73,10 @@ class Selection {
       if (native.start.node === this.cursor.textNode) return; // cursor.restore() will handle
       this.emitter.once(
         Emitter.events.SCROLL_UPDATE,
-        (source, mutations: MutationRecord[]) => {
+        (source, mutations: MutationRecord[], context) => {
           try {
             if (
+              !context.range && // context.range exists means SCROLL_OPTIMIZE listener has handled range
               this.root.contains(native.start.node) &&
               this.root.contains(native.end.node)
             ) {
