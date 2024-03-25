@@ -241,7 +241,7 @@ describe('Clipboard', () => {
         '<div> 0 </div><div> <div> 1 2 <span> 3 </span> 4 </div> </div>' +
         '<div><span>5 </span><span>6 </span><span> 7</span><span> 8</span></div>';
       const delta = createClipboard().convert({ html });
-      expect(delta).toEqual(new Delta().insert('0\n1 2  3  4\n5 6  7 8'));
+      expect(delta).toEqual(new Delta().insert('0\n\n1 2  3  4\n5 6  7 8'));
     });
 
     test('inline whitespace', () => {
@@ -286,25 +286,25 @@ describe('Clipboard', () => {
     test('newlines between block elements', () => {
       const html = '<p>foo</p>\n<p>bar</p>';
       const delta = createClipboard().convert({ html });
-      expect(delta).toEqual(new Delta().insert('foo\nbar'));
+      expect(delta).toEqual(new Delta().insert('foo\n\nbar'));
     });
 
     test('multiple newlines between block elements', () => {
       const html = '<p>foo</p>\n\n\n\n<p>bar</p>';
       const delta = createClipboard().convert({ html });
-      expect(delta).toEqual(new Delta().insert('foo\nbar'));
+      expect(delta).toEqual(new Delta().insert('foo\n\nbar'));
     });
 
     test('space between empty paragraphs', () => {
       const html = '<p></p> <p></p>';
       const delta = createClipboard().convert({ html });
-      expect(delta).toEqual(new Delta().insert('\n'));
+      expect(delta).toEqual(new Delta().insert('\n\n'));
     });
 
     test('newline between empty paragraphs', () => {
       const html = '<p></p>\n<p></p>';
       const delta = createClipboard().convert({ html });
-      expect(delta).toEqual(new Delta().insert('\n'));
+      expect(delta).toEqual(new Delta().insert('\n\n'));
     });
 
     test('break', () => {

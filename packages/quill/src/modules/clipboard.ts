@@ -552,7 +552,7 @@ function matchNewline(node: Node, delta: Delta, scroll: ScrollBlot) {
     ) {
       return delta.insert('\n');
     }
-    if (delta.length() > 0 && node.nextSibling) {
+    if (delta.length() >= 0 && node.nextSibling) {
       let nextSibling: Node | null = node.nextSibling;
       while (nextSibling != null) {
         if (isLine(nextSibling, scroll)) {
