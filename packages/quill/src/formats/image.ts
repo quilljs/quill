@@ -54,4 +54,4 @@ class Image extends EmbedBlot {
   }
 }
 
-export default Image;
+export { Image as default, ATTRIBUTES };
