@@ -26,10 +26,23 @@ import normalizeExternalHTML from './normalizeExternalHTML/index.js';
 
 const debug = logger('quill:clipboard');
 
-type Selector = string | Node['TEXT_NODE'] | Node['ELEMENT_NODE'];
-type Matcher = (node: Node, delta: Delta, scroll: ScrollBlot) => Delta;
+type TextSelector = Node['TEXT_NODE'];
+type ElementSelector = string | Node['ELEMENT_NODE'];
+type Selector = TextSelector | ElementSelector;
 
-const CLIPBOARD_CONFIG: [Selector, Matcher][] = [
+type TextMatcher = (node: Text, delta: Delta, scroll: ScrollBlot) => Delta;
+type ElementMatcher = (
+  node: Element,
+  delta: Delta,
+  scroll: ScrollBlot,
+) => Delta;
+type Matcher = TextMatcher | ElementMatcher;
+
+type MatcherConfig =
+  | [TextSelector, TextMatcher]
+  | [ElementSelector, ElementMatcher];
+
+const CLIPBOARD_CONFIG: MatcherConfig[] = [
   [Node.TEXT_NODE, matchText],
   [Node.TEXT_NODE, matchNewline],
   ['br', matchBreak],
@@ -68,7 +81,7 @@ const STYLE_ATTRIBUTORS = [
 }, {});
 
 interface ClipboardOptions {
-  matchers: [Selector, Matcher][];
+  matchers: MatcherConfig[];
 }
 
 class Clipboard extends Module<ClipboardOptions> {
@@ -76,7 +89,7 @@ class Clipboard extends Module<ClipboardOptions> {
     matchers: [],
   };
 
-  matchers: [Selector, Matcher][];
+  matchers: MatcherConfig[];
 
   constructor(quill: Quill, options: Partial<ClipboardOptions>) {
     super(quill, options);
@@ -86,15 +99,15 @@ class Clipboard extends Module<ClipboardOptions> {
     this.quill.root.addEventListener('cut', (e) => this.onCaptureCopy(e, true));
     this.quill.root.addEventListener('paste', this.onCapturePaste.bind(this));
     this.matchers = [];
-    CLIPBOARD_CONFIG.concat(this.options.matchers ?? []).forEach(
-      ([selector, matcher]) => {
-        this.addMatcher(selector, matcher);
-      },
-    );
+    CLIPBOARD_CONFIG.concat(this.options.matchers ?? []).forEach((config) => {
+      this.matchers.push(config);
+    });
   }
 
-  addMatcher(selector: Selector, matcher: Matcher) {
-    this.matchers.push([selector, matcher]);
+  addMatcher(selector: TextSelector, matcher: TextMatcher): void;
+  addMatcher(selector: ElementSelector, matcher: ElementMatcher): void;
+  addMatcher(selector: Selector, matcher: Matcher): void {
+    this.matchers.push([selector, matcher] as MatcherConfig);
   }
 
   convert(
@@ -128,17 +141,17 @@ class Clipboard extends Module<ClipboardOptions> {
     const doc = new DOMParser().parseFromString(html, 'text/html');
     this.normalizeHTML(doc);
     const container = doc.body;
-    const nodeMatches = new WeakMap();
+    const queryMatches = new WeakMap<Element, ElementMatcher[]>();
     const [elementMatchers, textMatchers] = this.prepareMatching(
       container,
-      nodeMatches,
+      queryMatches,
     );
     return traverse(
       this.quill.scroll,
       container,
       elementMatchers,
       textMatchers,
-      nodeMatches,
+      queryMatches,
     );
   }
 
@@ -249,9 +262,12 @@ class Clipboard extends Module<ClipboardOptions> {
     this.quill.scrollSelectionIntoView();
   }
 
-  prepareMatching(container: Element, nodeMatches: WeakMap<Node, Matcher[]>) {
-    const elementMatchers: Matcher[] = [];
-    const textMatchers: Matcher[] = [];
+  prepareMatching(
+    container: Element,
+    queryMatches: WeakMap<Element, ElementMatcher[]>,
+  ): [elementMatchers: ElementMatcher[], textMatchers: TextMatcher[]] {
+    const elementMatchers: ElementMatcher[] = [];
+    const textMatchers: TextMatcher[] = [];
     this.matchers.forEach((pair) => {
       const [selector, matcher] = pair;
       switch (selector) {
@@ -263,11 +279,11 @@ class Clipboard extends Module<ClipboardOptions> {
           break;
         default:
           Array.from(container.querySelectorAll(selector)).forEach((node) => {
-            if (nodeMatches.has(node)) {
-              const matches = nodeMatches.get(node);
+            if (queryMatches.has(node)) {
+              const matches = queryMatches.get(node);
               matches?.push(matcher);
             } else {
-              nodeMatches.set(node, [matcher]);
+              queryMatches.set(node, [matcher]);
             }
           });
           break;
@@ -355,7 +371,7 @@ function isLine(node: Node, scroll: ScrollBlot) {
   ].includes(node.tagName.toLowerCase());
 }
 
-function isBetweenInlineElements(node: HTMLElement, scroll: ScrollBlot) {
+function isBetweenInlineElements(node: Text | Element, scroll: ScrollBlot) {
   return (
     node.previousElementSibling &&
     node.nextElementSibling &&
@@ -364,47 +380,54 @@ function isBetweenInlineElements(node: HTMLElement, scroll: ScrollBlot) {
   );
 }
 
-const preNodes = new WeakMap();
-function isPre(node: Node | null) {
+const preNodes = new WeakMap<Node, boolean>();
+function isPre(node: Node | null): node is HTMLPreElement {
   if (node == null) return false;
   if (!preNodes.has(node)) {
-    // @ts-expect-error
-    if (node.tagName === 'PRE') {
+    if (isElement(node) && node.tagName === 'PRE') {
       preNodes.set(node, true);
     } else {
       preNodes.set(node, isPre(node.parentNode));
     }
   }
-  return preNodes.get(node);
+  return !!preNodes.get(node);
+}
+
+function isText(node: Node): node is Text {
+  return node.nodeType === node.TEXT_NODE;
+}
+
+function isElement(node: Node): node is Element {
+  return node.nodeType === node.ELEMENT_NODE;
 }
 
 function traverse(
   scroll: ScrollBlot,
   node: ChildNode,
-  elementMatchers: Matcher[],
-  textMatchers: Matcher[],
-  nodeMatches: WeakMap<Node, Matcher[]>,
+  elementMatchers: ElementMatcher[],
+  textMatchers: TextMatcher[],
+  queryMatches: WeakMap<Element, ElementMatcher[]>,
 ): Delta {
   // Post-order
-  if (node.nodeType === node.TEXT_NODE) {
+  if (isText(node)) {
     return textMatchers.reduce((delta: Delta, matcher) => {
       return matcher(node, delta, scroll);
     }, new Delta());
   }
-  if (node.nodeType === node.ELEMENT_NODE) {
+  if (isElement(node)) {
     return Array.from(node.childNodes || []).reduce((delta, childNode) => {
       let childrenDelta = traverse(
         scroll,
         childNode,
         elementMatchers,
         textMatchers,
-        nodeMatches,
+        queryMatches,
       );
-      if (childNode.nodeType === node.ELEMENT_NODE) {
+      if (isElement(childNode)) {
         childrenDelta = elementMatchers.reduce((reducedDelta, matcher) => {
-          return matcher(childNode as HTMLElement, reducedDelta, scroll);
+          return matcher(childNode, reducedDelta, scroll);
         }, childrenDelta);
-        childrenDelta = (nodeMatches.get(childNode) || []).reduce(
+        childrenDelta = (queryMatches.get(childNode) || []).reduce(
           (reducedDelta, matcher) => {
             return matcher(childNode, reducedDelta, scroll);
           },
@@ -454,7 +477,7 @@ function matchAttributor(node: HTMLElement, delta: Delta, scroll: ScrollBlot) {
   );
 }
 
-function matchBlot(node: Node, delta: Delta, scroll: ScrollBlot) {
+function matchBlot(node: Element, delta: Delta, scroll: ScrollBlot) {
   const match = scroll.query(node);
   if (match == null) return delta;
   // @ts-expect-error
@@ -522,8 +545,7 @@ function matchIndent(node: Node, delta: Delta, scroll: ScrollBlot) {
   let indent = -1;
   let parent = node.parentNode;
   while (parent != null) {
-    // @ts-expect-error
-    if (['OL', 'UL'].includes(parent.tagName)) {
+    if (isElement(parent) && ['OL', 'UL'].includes(parent.tagName)) {
       indent += 1;
     }
     parent = parent.parentNode;
@@ -538,11 +560,10 @@ function matchIndent(node: Node, delta: Delta, scroll: ScrollBlot) {
   }, new Delta());
 }
 
-function matchList(node: Node, delta: Delta, scroll: ScrollBlot) {
-  const element = node as Element;
-  let list = element.tagName === 'OL' ? 'ordered' : 'bullet';
+function matchList(node: Element, delta: Delta, scroll: ScrollBlot) {
+  let list = node.tagName === 'OL' ? 'ordered' : 'bullet';
 
-  const checkedAttr = element.getAttribute('data-checked');
+  const checkedAttr = node.getAttribute('data-checked');
   if (checkedAttr) {
     list = checkedAttr === 'true' ? 'checked' : 'unchecked';
   }
@@ -550,7 +571,7 @@ function matchList(node: Node, delta: Delta, scroll: ScrollBlot) {
   return applyFormat(delta, 'list', list, scroll);
 }
 
-function matchNewline(node: Node, delta: Delta, scroll: ScrollBlot) {
+function matchNewline(node: Text | Element, delta: Delta, scroll: ScrollBlot) {
   if (!deltaEndsWith(delta, '\n')) {
     if (
       isLine(node, scroll) &&
@@ -624,8 +645,7 @@ function matchTable(
   return delta;
 }
 
-function matchText(node: HTMLElement, delta: Delta, scroll: ScrollBlot) {
-  // @ts-expect-error
+function matchText(node: Text, delta: Delta, scroll: ScrollBlot) {
   let text = node.data;
   // Word represents empty line with <o:p>&nbsp;</o:p>
   if (node.parentElement?.tagName === 'O:P') {

@@ -322,7 +322,6 @@ class Syntax extends Module<SyntaxOptions> {
       ],
       [
         (node, delta) => {
-          // @ts-expect-error
           return node.data.split('\n').reduce((memo, nodeText, i) => {
             if (i !== 0) memo.insert('\n', { [CodeBlock.blotName]: language });
             return memo.insert(nodeText);
