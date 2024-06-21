@@ -806,6 +806,13 @@ describe('Editor', () => {
     });
   });
 
+  describe('update()', () => {
+    test('chop off void ops', () => {
+      const editor = createEditor('<p><strong>a</strong></p>');
+      expect(editor.update(new Delta().retain(1))).toEqual(new Delta());
+    });
+  });
+
   describe('insertContents', () => {
     const video =
       '<iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>';

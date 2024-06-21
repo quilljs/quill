@@ -310,6 +310,8 @@ class Editor {
       this.delta = this.getDelta();
       if (!change || !isEqual(oldDelta.compose(change), this.delta)) {
         change = oldDelta.diff(this.delta, selectionInfo);
+      } else if (change) {
+        change = new Delta(change.ops.slice()).chop();
       }
     }
     return change;

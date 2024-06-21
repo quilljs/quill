@@ -249,7 +249,7 @@ describe('editor', () => {
         const doc = quill.getContents();
         const change = generateChange(doc, randomInt(4) + 1);
         const diff = quill.updateContents(change);
-        expect(change).toEqual(diff);
+        expect(change.chop()).toEqual(diff);
       }
     });
   });

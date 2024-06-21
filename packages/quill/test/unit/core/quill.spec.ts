@@ -114,19 +114,45 @@ describe('Quill', () => {
       return { quill, oldDelta };
     };
 
-    test('deleteText()', () => {
-      const { quill, oldDelta } = setup();
-      quill.deleteText(3, 2);
-      const change = new Delta().retain(3).delete(2);
-      expect(quill.root.innerHTML).toMatchInlineSnapshot(
-        '"<p>012<em>5</em>67</p>"',
-      );
-      expect(quill.emitter.emit).toHaveBeenCalledWith(
-        Emitter.events.TEXT_CHANGE,
-        change,
-        oldDelta,
-        Emitter.sources.API,
-      );
+    describe('deleteText()', () => {
+      test('delete text', () => {
+        const { quill, oldDelta } = setup();
+        quill.deleteText(3, 2);
+        const change = new Delta().retain(3).delete(2);
+        expect(quill.root.innerHTML).toMatchInlineSnapshot(
+          '"<p>012<em>5</em>67</p>"',
+        );
+        expect(quill.emitter.emit).toHaveBeenCalledWith(
+          Emitter.events.TEXT_CHANGE,
+          change,
+          oldDelta,
+          Emitter.sources.API,
+        );
+      });
+
+      test('delete 0 length', () => {
+        const { quill } = setup();
+        const delta = quill.deleteText(3, 0);
+        expect(delta).toEqual(new Delta());
+        expect(quill.emitter.emit).not.toHaveBeenCalledWith(
+          Emitter.events.TEXT_CHANGE,
+          expect.anything(),
+          expect.anything(),
+          expect.anything(),
+        );
+      });
+
+      test('delete after trailing', () => {
+        const { quill } = setup();
+        const delta = quill.deleteText(100000, 10);
+        expect(delta).toEqual(new Delta());
+        expect(quill.emitter.emit).not.toHaveBeenCalledWith(
+          Emitter.events.TEXT_CHANGE,
+          expect.anything(),
+          expect.anything(),
+          expect.anything(),
+        );
+      });
     });
 
     test('format()', () => {
