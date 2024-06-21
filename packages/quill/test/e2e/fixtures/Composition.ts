@@ -7,6 +7,7 @@ import type {
 abstract class CompositionSession {
   abstract update(key: string): Promise<void>;
   abstract commit(committedText: string): Promise<void>;
+  abstract cancel(): Promise<void>;
 
   protected composingData = '';
 
@@ -35,12 +36,7 @@ class ChromiumCompositionSession extends CompositionSession {
   async update(key: string) {
     await this.withKeyboardEvents(key, async () => {
       this.composingData += key;
-
-      await this.session.send('Input.imeSetComposition', {
-        selectionStart: this.composingData.length,
-        selectionEnd: this.composingData.length,
-        text: this.composingData,
-      });
+      this.updateComposition();
     });
   }
 
@@ -49,6 +45,21 @@ class ChromiumCompositionSession extends CompositionSession {
       await this.session.send('Input.insertText', {
         text: committedText,
       });
+    });
+  }
+
+  async cancel() {
+    await this.withKeyboardEvents('Escape', async () => {
+      this.composingData = '';
+      await this.updateComposition();
+    });
+  }
+
+  private async updateComposition() {
+    await this.session.send('Input.imeSetComposition', {
+      selectionStart: this.composingData.length,
+      selectionEnd: this.composingData.length,
+      text: this.composingData,
     });
   }
 }

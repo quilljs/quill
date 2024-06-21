@@ -61,6 +61,10 @@ export default class EditorPage {
     return this.page.locator('.ql-editor');
   }
 
+  get cursorBlot() {
+    return this.root.locator('.ql-cursor');
+  }
+
   async open() {
     await this.page.goto('/');
     await this.page.waitForSelector('.ql-editor', { timeout: 10000 });

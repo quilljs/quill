@@ -116,18 +116,7 @@ class Selection {
     });
     this.emitter.on(Emitter.events.COMPOSITION_END, () => {
       this.composing = false;
-      if (this.cursor.parent) {
-        const range = this.cursor.restore();
-        if (!range) return;
-        setTimeout(() => {
-          this.setNativeRange(
-            range.startNode,
-            range.startOffset,
-            range.endNode,
-            range.endOffset,
-          );
-        }, 1);
-      }
+      this.restoreCursor();
     });
   }
 
@@ -444,20 +433,11 @@ class Selection {
     }
     if (!isEqual(oldRange, this.lastRange)) {
       if (
-        !this.composing &&
         nativeRange != null &&
         nativeRange.native.collapsed &&
         nativeRange.start.node !== this.cursor.textNode
       ) {
-        const range = this.cursor.restore();
-        if (range) {
-          this.setNativeRange(
-            range.startNode,
-            range.startOffset,
-            range.endNode,
-            range.endOffset,
-          );
-        }
+        this.restoreCursor();
       }
       const args = [
         Emitter.events.SELECTION_CHANGE,
@@ -470,6 +450,38 @@ class Selection {
         this.emitter.emit(...args);
       }
     }
+  }
+
+  private restoreCursor() {
+    if (!this.cursor.parent || this.composing) return;
+
+    const restoredRange = this.cursor.restore();
+    if (restoredRange) {
+      this.setNativeRange(
+        restoredRange.startNode,
+        restoredRange.startOffset,
+        restoredRange.endNode,
+        restoredRange.endOffset,
+      );
+    }
+    this.emitter.once(Emitter.events.SCROLL_OPTIMIZE, () => {
+      // Re-apply the selection after the optimize phase.
+      // This is needed in two cases:
+      // 1. When `restoredRange` is null: this can happen when the caret
+      //    is moved out of the cursor blot by the user.
+      // 2. When `restoredRange` is not null but either point of it does not
+      //    exist in the DOM tree anymore: this can happen when the cursor blot
+      //    is empty (e.g. when user cancels a composition session) so that the
+      //    wrapping empty blot referred by `restoredRange` is removed in the
+      //    optimize phase.
+      if (
+        !restoredRange ||
+        !this.root.contains(restoredRange.startNode) ||
+        (restoredRange.endNode && !this.root.contains(restoredRange.endNode))
+      ) {
+        this.setRange(this.lastRange);
+      }
+    });
   }
 }
 
