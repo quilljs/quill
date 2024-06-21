@@ -300,9 +300,15 @@ class Scroll extends ScrollBlot {
     if (mutations.length > 0) {
       this.emitter.emit(Emitter.events.SCROLL_BEFORE_UPDATE, source, mutations);
     }
-    super.update(mutations.concat([])); // pass copy
+    const context = {};
+    super.update(mutations.concat([]), context); // pass copy
     if (mutations.length > 0) {
-      this.emitter.emit(Emitter.events.SCROLL_UPDATE, source, mutations);
+      this.emitter.emit(
+        Emitter.events.SCROLL_UPDATE,
+        source,
+        mutations,
+        context,
+      );
     }
   }
 
