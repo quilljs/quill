@@ -77,16 +77,18 @@ class Embed extends EmbedBlot {
   }
 
   update(mutations: MutationRecord[], context: Record<string, unknown>) {
-    mutations.forEach((mutation) => {
-      if (
+    const mutation = mutations.find((mutation) => {
+      return (
         mutation.type === 'characterData' &&
         (mutation.target === this.leftGuard ||
           mutation.target === this.rightGuard)
-      ) {
-        const range = this.restore(mutation.target as Text);
-        if (range) context.range = range;
-      }
+      );
     });
+
+    if (mutation) {
+      const range = this.restore(mutation.target as Text);
+      if (range) context.range = range;
+    }
   }
 }
 
