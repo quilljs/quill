@@ -28,7 +28,7 @@ class Formula extends Embed {
 
   html() {
     const { formula } = this.value();
-    return `<span>${formula}</span>`;
+    return `<span class="${Formula.className}" data-value="${formula}">${formula}</span>`;
   }
 }
 
