@@ -158,9 +158,10 @@ class BaseTheme extends Theme {
           ? 'background'
           : 'color';
         if (select.querySelector('option') == null) {
-          fillSelect(
+          fillColorSelect(
             select,
             COLORS,
+            format,
             format === 'background' ? '#ffffff' : '#000000',
           );
         }
@@ -355,6 +356,24 @@ function fillSelect(
       option.setAttribute('selected', 'selected');
     } else {
       option.setAttribute('value', String(value));
+    }
+    select.appendChild(option);
+  });
+}
+function fillColorSelect(
+  select: HTMLSelectElement,
+  values: Array<string | boolean>,
+  format: string,
+  defaultValue: unknown = false,
+) {
+  const colorGetter = document.createElement('span') as any;
+  values.forEach((value) => {
+    const option = document.createElement('option');
+    if (value === defaultValue) {
+      option.setAttribute('selected', 'selected');
+    } else {
+      colorGetter.style[format] = String(value);
+      option.setAttribute('value', colorGetter.style[format]);
     }
     select.appendChild(option);
   });

@@ -233,12 +233,18 @@ function addSelect(
   format: string,
   values: Array<string | boolean>,
 ) {
+  const colorGetter = document.createElement('span') as any;
   const input = document.createElement('select');
   input.classList.add(`ql-${format}`);
   values.forEach((value) => {
     const option = document.createElement('option');
     if (value !== false) {
-      option.setAttribute('value', String(value));
+      let colorValue = String(value);
+      if (format === 'color' || format === 'background') {
+        colorGetter.style[format] = String(value);
+        colorValue = colorGetter.style[format];
+      }
+      option.setAttribute('value', colorValue);
     } else {
       option.setAttribute('selected', 'selected');
     }

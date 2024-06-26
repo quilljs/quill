@@ -18,7 +18,15 @@ const attributeDefs: {
   blockEmbed: AttributeDef[];
 } = {
   text: [
-    { name: 'color', values: ['#ffffff', '#000000', '#ff0000', '#ffff00'] },
+    {
+      name: 'color',
+      values: [
+        'rgb(255, 255, 255)',
+        'rgb(0, 0, 0)',
+        'rgb(255, 0, 0)',
+        'rgb(255, 255, 0)',
+      ],
+    },
     { name: 'bold', values: [true] },
     { name: 'code', values: [true] },
     // @ts-expect-error

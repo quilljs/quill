@@ -1,10 +1,9 @@
-import { ClassAttributor, Scope } from 'parchment';
-import { ColorAttributor } from './color.js';
+import { ClassAttributor, Scope, StyleAttributor } from 'parchment';
 
 const BackgroundClass = new ClassAttributor('background', 'ql-bg', {
   scope: Scope.INLINE,
 });
-const BackgroundStyle = new ColorAttributor('background', 'background-color', {
+const BackgroundStyle = new StyleAttributor('background', 'background-color', {
   scope: Scope.INLINE,
 });
 
