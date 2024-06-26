@@ -348,6 +348,7 @@ function isLine(node: Node, scroll: ScrollBlot) {
     'pre',
     'section',
     'table',
+    'th',
     'td',
     'tr',
     'ul',
