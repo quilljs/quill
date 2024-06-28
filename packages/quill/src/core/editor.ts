@@ -337,20 +337,27 @@ function convertListHTML(
   }
   const [{ child, offset, length, indent, type }, ...rest] = items;
   const [tag, attribute] = getListType(type);
+  // CLASSNAME FIX
+  const className =
+    (<HTMLLIElement>child.domNode).className != ''
+      ? ` class="${(<HTMLLIElement>child.domNode).className}"`
+      : '';
   if (indent > lastIndent) {
     types.push(type);
     if (indent === lastIndent + 1) {
-      return `<${tag}><li${attribute}>${convertHTML(
+      // CLASSNAME FIX
+      return `<${tag}><li${attribute}${className}>${convertHTML(
         child,
         offset,
         length,
       )}${convertListHTML(rest, indent, types)}`;
     }
-    return `<${tag}><li>${convertListHTML(items, lastIndent + 1, types)}`;
+    return `<${tag}><li${className}>${convertListHTML(items, lastIndent + 1, types)}`;
   }
   const previousType = types[types.length - 1];
   if (indent === lastIndent && type === previousType) {
-    return `</li><li${attribute}>${convertHTML(
+    // CLASSNAME FIX
+    return `</li><li${attribute}${className}>${convertHTML(
       child,
       offset,
       length,
