@@ -188,6 +188,7 @@ function addButton(container: HTMLElement, format: string, value?: string) {
   const input = document.createElement('button');
   input.setAttribute('type', 'button');
   input.classList.add(`ql-${format}`);
+  input.classList.add(`ql-button`);
   input.setAttribute('aria-pressed', 'false');
   if (value != null) {
     input.value = value;
